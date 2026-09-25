@@ -1,219 +1,137 @@
-{
-  "cells": [
-    {
-      "cell_type": "markdown",
-      "metadata": {
-        "id": "view-in-github",
-        "colab_type": "text"
-      },
-      "source": [
-        "<a href=\"https://colab.research.google.com/github/khoada2410445-cmd/Python-2026-L1/blob/main/labwork1b.py\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
-      ]
-    },
-    {
-      "cell_type": "code",
-      "execution_count": null,
-      "metadata": {
-        "colab": {
-          "background_save": true,
-          "base_uri": "https://localhost:8080/"
-        },
-        "id": "hacdQcwsG2IM",
-        "outputId": "67928bca-1dca-40da-8e33-967d8ff2c263"
-      },
-      "outputs": [
-        {
-          "name": "stdout",
-          "output_type": "stream",
-          "text": [
-            "\n",
-            "===================================\n",
-            " STUDENT MARK MANAGEMENT SYSTEM \n",
-            "===================================\n",
-            "1. Input Students\n",
-            "2. Input Courses\n",
-            "3. Input Marks for Course\n",
-            "4. List Courses\n",
-            "5. List Students\n",
-            "6. Show Marks for Course\n",
-            "0. Exit\n",
-            "\n",
-            "--- Course 1 ---\n",
-            "\n",
-            "--- Course 2 ---\n"
-          ]
-        }
-      ],
-      "source": [
-        "\n",
-        "# Practical Work 1: Student Mark Management\n",
-        "\n",
-        "def input_number_of_students():\n",
-        "    return int(input(\"Enter total number of students: \"))\n",
-        "\n",
-        "\n",
-        "def input_student_info(num_students):\n",
-        "    students = []\n",
-        "    for i in range(num_students):\n",
-        "        print(f\"\\n--- Student {i + 1} ---\")\n",
-        "        student_id = input(\"Enter Student ID: \").strip()\n",
-        "        name = input(\"Enter Student Name: \").strip()\n",
-        "        dob = input(\"Enter Date of Birth (DD/MM/YYYY): \").strip()\n",
-        "\n",
-        "        students.append({\n",
-        "            \"id\": student_id,\n",
-        "            \"name\": name,\n",
-        "            \"dob\": dob\n",
-        "        })\n",
-        "    return students\n",
-        "\n",
-        "\n",
-        "def input_number_of_courses():\n",
-        "    return int(input(\"\\nEnter total number of courses: \"))\n",
-        "\n",
-        "\n",
-        "def input_course_info(num_courses):\n",
-        "    courses = []\n",
-        "    for i in range(num_courses):\n",
-        "        print(f\"\\n--- Course {i + 1} ---\")\n",
-        "        course_id = input(\"Enter Course ID: \").strip()\n",
-        "        course_name = input(\"Enter Course Name: \").strip()\n",
-        "\n",
-        "        courses.append({\n",
-        "            \"id\": course_id,\n",
-        "            \"name\": course_name\n",
-        "        })\n",
-        "    return courses\n",
-        "\n",
-        "\n",
-        "def select_course_and_input_marks(courses, students, marks):\n",
-        "    if not courses:\n",
-        "        print(\"No courses available! Please add courses first.\")\n",
-        "        return\n",
-        "    if not students:\n",
-        "        print(\"No students available! Please add students first.\")\n",
-        "        return\n",
-        "\n",
-        "    print(\"\\nAvailable Courses:\")\n",
-        "    for course in courses:\n",
-        "        print(f\"ID: {course['id']} | Name: {course['name']}\")\n",
-        "\n",
-        "    selected_id = input(\"\\nEnter Course ID to input marks for: \").strip()\n",
-        "\n",
-        "    # Check if course exists\n",
-        "    course_exists = any(c['id'] == selected_id for c in courses)\n",
-        "    if not course_exists:\n",
-        "        print(\"Course ID not found!\")\n",
-        "        return\n",
-        "\n",
-        "    if selected_id not in marks:\n",
-        "        marks[selected_id] = {}\n",
-        "\n",
-        "    print(f\"\\nInput marks for course [{selected_id}]:\")\n",
-        "    for student in students:\n",
-        "        s_id = student['id']\n",
-        "        mark = float(input(f\"Enter mark for {student['name']} (ID: {s_id}): \"))\n",
-        "        marks[selected_id][s_id] = mark\n",
-        "\n",
-        "\n",
-        "def list_courses(courses):\n",
-        "    print(\"\\n================ COURSE LIST ================\")\n",
-        "    if not courses:\n",
-        "        print(\"No courses registered yet.\")\n",
-        "        return\n",
-        "    for c in courses:\n",
-        "        print(f\"ID: {c['id']:<10} | Name: {c['name']}\")\n",
-        "\n",
-        "\n",
-        "def list_students(students):\n",
-        "    print(\"\\n================ STUDENT LIST ================\")\n",
-        "    if not students:\n",
-        "        print(\"No students registered yet.\")\n",
-        "        return\n",
-        "    for s in students:\n",
-        "        print(f\"ID: {s['id']:<10} | Name: {s['name']:<20} | DoB: {s['dob']}\")\n",
-        "\n",
-        "\n",
-        "def show_student_marks(courses, students, marks):\n",
-        "    if not marks:\n",
-        "        print(\"\\nNo marks recorded yet.\")\n",
-        "        return\n",
-        "\n",
-        "    selected_id = input(\"\\nEnter Course ID to view marks: \").strip()\n",
-        "\n",
-        "    if selected_id not in marks:\n",
-        "        print(\"No marks found for this course!\")\n",
-        "        return\n",
-        "\n",
-        "    # Find course name\n",
-        "    course_name = next((c['name'] for c in courses if c['id'] == selected_id), selected_id)\n",
-        "\n",
-        "    print(f\"\\n================ MARKS FOR COURSE: {course_name} ({selected_id}) ================\")\n",
-        "    for student in students:\n",
-        "        s_id = student['id']\n",
-        "        if s_id in marks[selected_id]:\n",
-        "            print(f\"ID: {s_id:<10} | Name: {student['name']:<20} | Mark: {marks[selected_id][s_id]}\")\n",
-        "\n",
-        "\n",
-        "def main():\n",
-        "    students = []\n",
-        "    courses = []\n",
-        "    marks = {}  # Format: {course_id: {student_id: mark}}\n",
-        "\n",
-        "    while True:\n",
-        "        print(\"\\n\" + \"=\"*35)\n",
-        "        print(\" STUDENT MARK MANAGEMENT SYSTEM \")\n",
-        "        print(\"=\"*35)\n",
-        "        print(\"1. Input Students\")\n",
-        "        print(\"2. Input Courses\")\n",
-        "        print(\"3. Input Marks for Course\")\n",
-        "        print(\"4. List Courses\")\n",
-        "        print(\"5. List Students\")\n",
-        "        print(\"6. Show Marks for Course\")\n",
-        "        print(\"0. Exit\")\n",
-        "\n",
-        "        choice = input(\"\\nSelect an option (0-6): \").strip()\n",
-        "\n",
-        "        if choice == \"1\":\n",
-        "            num_s = input_number_of_students()\n",
-        "            students = input_student_info(num_s)\n",
-        "        elif choice == \"2\":\n",
-        "            num_c = input_number_of_courses()\n",
-        "            courses = input_course_info(num_c)\n",
-        "        elif choice == \"3\":\n",
-        "            select_course_and_input_marks(courses, students, marks)\n",
-        "        elif choice == \"4\":\n",
-        "            list_courses(courses)\n",
-        "        elif choice == \"5\":\n",
-        "            list_students(students)\n",
-        "        elif choice == \"6\":\n",
-        "            show_student_marks(courses, students, marks)\n",
-        "        elif choice == \"0\":\n",
-        "            print(\"Exiting program. Goodbye!\")\n",
-        "            break\n",
-        "        else:\n",
-        "            print(\"Invalid selection! Please try again.\")\n",
-        "\n",
-        "\n",
-        "if __name__ == \"__main__\":\n",
-        "    main()\n"
-      ]
-    }
-  ],
-  "metadata": {
-    "colab": {
-      "provenance": [],
-      "authorship_tag": "ABX9TyN2a4JQAjIywfAzpam+xBnR",
-      "include_colab_link": true
-    },
-    "kernelspec": {
-      "display_name": "Python 3",
-      "name": "python3"
-    },
-    "language_info": {
-      "name": "python"
-    }
-  },
-  "nbformat": 4,
-  "nbformat_minor": 0
-}
+# Global data structures
+students = []  # List of tuples: (student_id, student_name, dob)
+courses = []   # List of tuples: (course_id, course_name)
+marks = {}     # Dict: (course_id, student_id) -> mark
+
+# --- Input Functions ---
+
+def input_number_of_students():
+    return int(input("Enter number of students: "))
+
+def input_student_info():
+    num_students = input_number_of_students()
+    for i in range(num_students):
+        print(f"\n--- Student {i + 1} ---")
+        student_id = input("  Enter Student ID: ").strip()
+        student_name = input("  Enter Student Name: ").strip()
+        dob = input("  Enter DoB (DD/MM/YYYY): ").strip()
+        students.append((student_id, student_name, dob))
+
+def input_number_of_courses():
+    return int(input("Enter number of courses: "))
+
+def input_course_info():
+    num_courses = input_number_of_courses()
+    for i in range(num_courses):
+        print(f"\n--- Course {i + 1} ---")
+        course_id = input("  Enter Course ID: ").strip()
+        course_name = input("  Enter Course Name: ").strip()
+        courses.append((course_id, course_name))
+
+def input_marks_for_course():
+    if not courses:
+        print("\nNo courses available. Please add courses first!")
+        return
+    if not students:
+        print("\nNo students available. Please add students first!")
+        return
+
+    print("\n=== SELECT A COURSE TO INPUT MARKS ===")
+    list_courses()
+    selected_course_id = input("Enter Course ID: ").strip()
+
+    # Check if course exists
+    course_exists = any(c[0] == selected_course_id for c in courses)
+    if not course_exists:
+        print("Course ID not found!")
+        return
+
+    print(f"\nEntering marks for Course: {selected_course_id}")
+    for student in students:
+        student_id, student_name, _ = student
+        mark = float(input(f"  Enter mark for {student_name} (ID: {student_id}): "))
+        marks[(selected_course_id, student_id)] = mark
+
+# --- Listing Functions ---
+
+def list_courses():
+    print("\n=== COURSE LIST ===")
+    if not courses:
+        print("No courses added yet.")
+        return
+    print(f"{'Course ID':<12} | {'Course Name':<25}")
+    print("-" * 40)
+    for course_id, course_name in courses:
+        print(f"{course_id:<12} | {course_name:<25}")
+
+def list_students():
+    print("\n=== STUDENT LIST ===")
+    if not students:
+        print("No students added yet.")
+        return
+    print(f"{'Student ID':<12} | {'Student Name':<25} | {'DoB':<12}")
+    print("-" * 55)
+    for student_id, student_name, dob in students:
+        print(f"{student_id:<12} | {student_name:<25} | {dob:<12}")
+
+def show_student_marks():
+    if not courses:
+        print("\nNo courses available.")
+        return
+
+    selected_course_id = input("\nEnter Course ID to view marks: ").strip()
+    
+    # Check if course exists
+    course_exists = any(c[0] == selected_course_id for c in courses)
+    if not course_exists:
+        print("Course ID not found!")
+        return
+
+    print(f"\n=== MARKS FOR COURSE: {selected_course_id} ===")
+    print(f"{'Student ID':<12} | {'Student Name':<25} | {'Mark':<5}")
+    print("-" * 50)
+    
+    for student in students:
+        student_id, student_name, _ = student
+        key = (selected_course_id, student_id)
+        mark = marks.get(key, "N/A")
+        print(f"{student_id:<12} | {student_name:<25} | {mark:<5}")
+
+# --- Main Program ---
+
+def main():
+    while True:
+        print("\n==================================")
+        print("   STUDENT MARK MANAGEMENT SYSTEM  ")
+        print("==================================")
+        print("1. Input Student Information")
+        print("2. Input Course Information")
+        print("3. Select Course & Input Marks")
+        print("4. List Courses")
+        print("5. List Students")
+        print("6. Show Marks for a Course")
+        print("7. Exit")
+        print("----------------------------------")
+        
+        choice = input("Enter your choice (1-7): ").strip()
+
+        if choice == '1':
+            input_student_info()
+        elif choice == '2':
+            input_course_info()
+        elif choice == '3':
+            input_marks_for_course()
+        elif choice == '4':
+            list_courses()
+        elif choice == '5':
+            list_students()
+        elif choice == '6':
+            show_student_marks()
+        elif choice == '7':
+            print("Exiting program. Goodbye!")
+            break
+        else:
+            print("Invalid option! Please choose between 1 and 7.")
+
+if __name__ == "__main__":
+    main()
