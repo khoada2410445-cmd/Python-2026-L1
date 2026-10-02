@@ -6,7 +6,7 @@ import output
 from domains.student import Student
 from domains.course import Course
 
-DATA_FILE = "students.dat"
+DATA_FILE = "pw5/students.dat"
 TXT_FILES = ["students.txt", "courses.txt", "marks.txt"]
 
 def load_data(students, courses):
