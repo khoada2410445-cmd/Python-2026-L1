@@ -103,5 +103,5 @@ def input_marks(stdscr, students, courses):
             student.add_mark(c_id, 0.0)
 
     write_marks_file(students)
-    stdscr.addstr("\nMarks saved to marks.txt! Press any key...")
+    stdscr.addstr("Marks saved to marks.txt! Press any key...")
     stdscr.getch()
