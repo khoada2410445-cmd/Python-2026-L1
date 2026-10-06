@@ -25,7 +25,7 @@ def display_students(stdscr, students, courses):
     import pandas as pd
 
 def export_to_csv(students, courses):
-    """Export student, course, and mark data to CSV files"""
+    """Export student, course, and mark data to CSV files (EXTRA)"""
     # 1. Export students.csv
     student_data = [{"id": s.get_id(), "name": s.get_name(), "dob": s.get_dob()} for s in students]
     df_students = pd.DataFrame(student_data)
@@ -39,10 +39,18 @@ def export_to_csv(students, courses):
     # 3. Export marks.csv
     mark_data = []
     for s in students:
-        for course_id, mark in s.get_marks().items():
-            mark_data.append({"student_id": s.get_id(), "course_id": course_id, "mark": mark})
-    df_marks = pd.DataFrame(mark_data)
+        # Kiểm tra xem student có phương thức lấy điểm không
+        marks = getattr(s, 'marks', {}) if hasattr(s, 'marks') else {}
+        if hasattr(s, 'get_marks'):
+            marks = s.get_marks()
+            
+        if isinstance(marks, dict):
+            for course_id, mark in marks.items():
+                mark_data.append({"student_id": s.get_id(), "course_id": course_id, "mark": mark})
+
+    df_marks = pd.DataFrame(mark_data, columns=["student_id", "course_id", "mark"])
     df_marks.to_csv("pw6/marks.csv", index=False)
+    
 
 
 def query_student_by_name(stdscr):
