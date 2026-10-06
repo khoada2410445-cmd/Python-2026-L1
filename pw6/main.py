@@ -8,19 +8,15 @@ import output
 DATA_FILE = "pw6/students.dat"
 
 def save_data(students, courses):
-    """Serialize students and courses data using pickle and compress into students.dat"""
-    # Dump objects into temporary pickle files
     with open("pw6/students.pkl", "wb") as f:
         pickle.dump(students, f)
     with open("pw6/courses.pkl", "wb") as f:
         pickle.dump(courses, f)
         
-    # Compress pickle files into students.dat archive
     with zipfile.ZipFile(DATA_FILE, 'w') as zipf:
         zipf.write("pw6/students.pkl", "students.pkl")
         zipf.write("pw6/courses.pkl", "courses.pkl")
             
-    # Clean up temporary pickle files
     if os.path.exists("pw6/students.pkl"):
         os.remove("pw6/students.pkl")
     if os.path.exists("pw6/courses.pkl"):
@@ -28,7 +24,6 @@ def save_data(students, courses):
 
 
 def load_data(students, courses):
-    """Decompress students.dat and load serialized objects using pickle"""
     if os.path.exists(DATA_FILE):
         try:
             with zipfile.ZipFile(DATA_FILE, 'r') as zipf:
@@ -36,16 +31,14 @@ def load_data(students, courses):
                 
             if os.path.exists("pw6/students.pkl"):
                 with open("pw6/students.pkl", "rb") as f:
-                    loaded_students = pickle.load(f)
-                    students.extend(loaded_students)
+                    students.extend(pickle.load(f))
                 os.remove("pw6/students.pkl")
                 
             if os.path.exists("pw6/courses.pkl"):
                 with open("pw6/courses.pkl", "rb") as f:
-                    loaded_courses = pickle.load(f)
-                    courses.extend(loaded_courses)
+                    courses.extend(pickle.load(f))
                 os.remove("pw6/courses.pkl")
-        except Exception as e:
+        except Exception:
             pass
 
 
@@ -53,7 +46,6 @@ def main(stdscr):
     students = []
     courses = []
 
-    # Decompress and unpickle data if available
     load_data(students, courses)
 
     while True:
@@ -65,9 +57,11 @@ def main(stdscr):
         stdscr.addstr("2. Input Course Info\n")
         stdscr.addstr("3. Input Marks for Course\n")
         stdscr.addstr("4. Show Student List & Ranked GPA\n")
-        stdscr.addstr("5. Exit & Compress Pickled Data\n")
+        stdscr.addstr("5. Export Data to CSV Files (EXTRA)\n")
+        stdscr.addstr("6. Query Student by Name via Pandas (EXTRA)\n")
+        stdscr.addstr("7. Exit & Compress Pickled Data\n")
         stdscr.addstr("===================================\n")
-        stdscr.addstr("Enter choice [1-5]: ")
+        stdscr.addstr("Enter choice [1-7]: ")
         stdscr.refresh()
 
         curses.echo()
@@ -83,6 +77,12 @@ def main(stdscr):
         elif choice == '4':
             output.display_gpa(stdscr, students)
         elif choice == '5':
+            output.export_to_csv(students, courses)
+            stdscr.addstr("\nExported CSV files successfully! Press any key...")
+            stdscr.getch()
+        elif choice == '6':
+            output.query_student_by_name(stdscr)
+        elif choice == '7':
             save_data(students, courses)
             break
 
